@@ -2,10 +2,9 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { SHOW_CART } from "./actions/actions";
-
 function Navbar() {
   const cartdata = useSelector(state=>state.cartReducer);
-  console.log(cartdata)
+  // console.log(cartdata)
    const dispatch = useDispatch()
   return (
     <div>

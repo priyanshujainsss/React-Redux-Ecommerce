@@ -1,4 +1,4 @@
-const cartInitialState=[];
+export const cartInitialState=[];
 const userInitialState=[{email:"test@1.com", password:"123456"},{email:"test@2.com",password:"123456"}]
 const cartReducer=(state=cartInitialState,action)=>{
     switch(action.type){
@@ -8,6 +8,27 @@ const cartReducer=(state=cartInitialState,action)=>{
             return state;
         case "REMOVE_CART":
             return [...state.filter(item => item !== action.payload)];
+        case "INC_QNTY":
+             return state.map((item)=>{
+                 if(item.id===action.payload.id){
+                     return {
+                         ...item,
+                         quantity:item.quantity+1
+                     }
+                 }
+                 else return item
+             })
+
+        case "DEC_QNTY":
+            return state.map((item)=>{
+                if(item.id===action.payload.id){
+                    return{
+                        ...item,
+                        quantity:item.quantity-1
+                    }
+                }else return item
+            })
+
         default :
             return state;       
         }

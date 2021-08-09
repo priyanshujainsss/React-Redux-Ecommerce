@@ -1,16 +1,18 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { REMOVE_CART } from "./actions/actions";
+import { REMOVE_CART, INC_QNTY, DEC_QNTY } from "./actions/actions";
 import Navbar from "./Navbar";
+
 const Cart = () => {
   const cartData = useSelector((state) => state.cartReducer);
+
   console.log(cartData, cartData.length);
   var cost = 0;
   const dispatch = useDispatch();
   {
     cartData.map((element) => {
       console.log(element.prize);
-      cost = cost + element.prize;
+      cost = cost + element.prize*element.quantity;
     });
   }
   console.log(cost);
@@ -23,13 +25,20 @@ const Cart = () => {
         <ul>
           {cartData.length > 0 ? (
             cartData.map((element) => {
-              return (
-                <div className="card mb-3" style={{ maxWidth: "540px" }}>
+              // element.quantity<1? dispatch(REMOVE_CART(element)):
+               if(element.quantity>0){
+              return(
+                     <div className="card mb-3" style={{ maxWidth: "540px" }}>
                   <div className="row g-0">
                     <div className="col-md-8">
                       <div className="card-body">
                         <h5 className="card-title">{element.productName}</h5>
                         <p className="card-text">{element.prize}</p>
+                        <div style={{ lineHeight:"30px", display:"flex", flexDirection:"row", margin:"5px"}} >
+                          <button  onClick={()=>dispatch(DEC_QNTY(element))}  style={{width:"35px", height:"35px", fontSize:"20px"}}>-</button>
+                          {/* <input value={element.quantity} style={{width:"35px", height:"35px"}}/> */}
+                          <div style={{width:"25px",padding:"5px"}} >{element.quantity}</div>
+                          <button onClick={()=>dispatch(INC_QNTY(element))}  style={{width:"35px", height:"35px", fontSize:"20px"}} >+</button></div>
                         <button onClick={()=>dispatch(REMOVE_CART(element))} > Remove Item</button>
                       </div>
                     </div>
@@ -42,9 +51,13 @@ const Cart = () => {
                     </div>
                   </div>
                 </div>
+              )}
+            else{
+            dispatch(REMOVE_CART(element))
+            }
+                
 
-                // <React.Fragment style={{display:"flex", height:"200px",margin:"10px 10px 10px 10px"}}> <li key={element} >{element.productName} {element.prize}</li><button onClick={()=>dispatch(REMOVE_CART(element))} > Remove Item</button><img src={element.image} style={{height:"82px", width:"100px", margin:"-40px 0px 10px 0px", float:"right"}} />  </React.Fragment>
-              );
+              
             })
           ) : (
             <p>Cart is Empty</p>
@@ -66,7 +79,7 @@ const Cart = () => {
                 {cartData.map((element) => {
                   return (
                     <>
-                      {element.prize} <br />
+                      {element.prize} *{element.quantity} <br />
                     </>
                   );
                 })}
